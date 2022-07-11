@@ -1,25 +1,18 @@
-package main.java.com.service;
+package main.java.com.utils;
 
-import main.java.com.config.BaseConfig;
+import main.java.com.domain.InputEntity;
 
 import java.io.*;
-import java.nio.file.Files;
 
 /**
  * @Author pengjiequn
- * @Date 2022/07/05 9:47
+ * @Date 2022/07/08 14:09
  * @Version 1.0
  */
-public class TestClass {
+public class FileReadUtils {
 
-
-    TestClass() {}
-
-    public <T> StringBuffer read(T clazz) {
-        StringBuffer buffer = new StringBuffer();
-
-        BaseConfig baseConfig = BaseConfig.getInstance();
-        String path = baseConfig.getBasePath();
+    public static InputEntity readFile(String path) {
+        InputEntity inputEntity = new InputEntity();
 
         File file = new File(path);
         if (!file.exists() || !file.isFile()) {
@@ -29,20 +22,23 @@ public class TestClass {
         try {
             FileReader reader = new FileReader(file);
             BufferedReader bf = new BufferedReader(reader);
+
             String line;
 
             while ((line = bf.readLine()) != null) {
                 String[] args = line.split(":");
                 if (args[0].equals("url")) {
-
-                } else if (args[0].equals("param")) {
-
+                    inputEntity.setUrl(args[1]);
+                } else if (args[0].equals("inParam")) {
+                    inputEntity.setInParam(args[1]);
+                } else if (args[0].equals("outParam")) {
+                    inputEntity.setOutParam(args[1]);
                 } else if (args[0].equals("treaty")) {
-
+                    inputEntity.setTreaty(args[1]);
                 }
             }
 
-            Byte[] bytes = new Byte[1024];
+            return inputEntity;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -50,10 +46,9 @@ public class TestClass {
             e.printStackTrace();
         }
 
+        return null;
 
-        return buffer;
     }
-
 
 
 }
